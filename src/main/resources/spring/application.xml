@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:filePath.properties"/>
+
+    <bean id="configurationUtil" class="am.test.data.util.ConfigurationUtil">
+        <property name="filePath" value="${file.path}"/>
+        <property name="resultFilePath" value="${result.file.path}"/>
+    </bean>
+
+    <bean id="fileContentProvider" class="am.test.data.util.FileContentProvider">
+        <constructor-arg name="configurationUtil" ref="configurationUtil"/>
+    </bean>
+
+    <bean id="calculateService" class="am.test.data.service.CalculateService">
+        <constructor-arg name="fileContentProvider" ref="fileContentProvider"/>
+    </bean>
+
+    <bean id="fileCreator" class="am.test.data.util.FileCreator">
+        <constructor-arg name="calculateService" ref="calculateService"/>
+        <constructor-arg name="configurationUtil" ref="configurationUtil"/>
+    </bean>
+</beans>
